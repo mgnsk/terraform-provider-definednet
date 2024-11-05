@@ -17,6 +17,13 @@ type Host struct {
 	IsLighthouse    bool     `json:"isLighthouse"`
 	IsRelay         bool     `json:"isRelay"`
 	Tags            []string `json:"tags"`
+	Metrics         struct {
+		Listen             string `json:"listen"`
+		Path               string `json:"path"`
+		Namespace          string `json:"namespace"`
+		SubSystem          string `json:"subsystem"`
+		EnableExtraMetrics bool   `json:"enable_extra_metrics"`
+	} `json:"metrics"`
 }
 
 // DeleteHost deletes a Defined.net host.
@@ -62,4 +69,11 @@ type UpdateHostRequest struct {
 	StaticAddresses []string `json:"staticAddresses"`
 	ListenPort      int      `json:"listenPort"`
 	Tags            []string `json:"tags"`
+	Metrics         struct {
+		Listen             string `json:"listen"`
+		Path               string `json:"path"`
+		Namespace          string `json:"namespace"`
+		SubSystem          string `json:"subsystem"`
+		EnableExtraMetrics bool   `json:"enable_extra_metrics"`
+	} `json:"metrics"`
 }

@@ -66,6 +66,27 @@ var Schema = schema.Schema{
 				stringplanmodifier.UseStateForUnknown(),
 			},
 		},
+		"metrics": schema.SingleNestedAttribute{
+			Description: "Host's metrics configuration",
+			Optional:    true,
+			Attributes: map[string]schema.Attribute{
+				"listen": schema.StringAttribute{
+					Default: nil,
+				},
+				"path": schema.StringAttribute{
+					Default: nil,
+				},
+				"namespace": schema.StringAttribute{
+					Default: nil,
+				},
+				"subsystem": schema.StringAttribute{
+					Default: nil,
+				},
+				"enable_extra_metrics": schema.BoolAttribute{
+					Default: nil,
+				},
+			},
+		},
 	},
 }
 

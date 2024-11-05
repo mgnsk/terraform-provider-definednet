@@ -3,8 +3,10 @@ package host
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/sendsmaily/terraform-provider-definednet/internal/definednet"
 )
 
@@ -17,6 +19,7 @@ type State struct {
 	IPAddress      types.String `tfsdk:"ip_address"`
 	Tags           types.List   `tfsdk:"tags"`
 	EnrollmentCode types.String `tfsdk:"enrollment_code"`
+	Metrics        types.Object `tfsdk:"metrics"`
 }
 
 // ApplyEnrollment applies Defined.net host enrollment information to the state.
@@ -34,7 +37,24 @@ func (s *State) ApplyHost(ctx context.Context, host *definednet.Host) (diags dia
 	s.Name = types.StringValue(host.Name)
 	s.NetworkID = types.StringValue(host.NetworkID)
 	s.RoleID = types.StringValue(host.RoleID)
-	s.Tags, diags = types.ListValueFrom(ctx, types.StringType, host.Tags)
+
+	{
+		var d diag.Diagnostics
+		s.Tags, d = types.ListValueFrom(ctx, types.StringType, host.Tags)
+		diags = append(diags, d...)
+	}
+
+	{
+		var d diag.Diagnostics
+		s.Metrics, d = types.ObjectValueFrom(ctx, map[string]attr.Type{
+			"listen":               basetypes.StringType{},
+			"path":                 basetypes.StringType{},
+			"namespace":            basetypes.StringType{},
+			"subsystem":            basetypes.StringType{},
+			"enable_extra_metrics": basetypes.BoolType{},
+		}, host.Metrics)
+		diags = append(diags, d...)
+	}
 
 	return diags
 }
